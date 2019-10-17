@@ -1,7 +1,7 @@
 package deliveryerror
 
 import (
-	"github.com/zainul/poskit/pkg/error/usererror"
+	"github.com/zainul/ark/pkg/error/usererror"
 )
 
 // Error ...

@@ -117,7 +117,7 @@
 [[projects]]
   branch = "master"
   digest = "1:5b830dcc26073623044a32642585a00a34a910640a4760e3a272b54eee596f23"
-  name = "github.com/zainul/poskit"
+  name = "github.com/zainul/ark"
   packages = [
     "pkg/error/usererror",
     "pkg/xlog",
@@ -196,8 +196,8 @@
     "github.com/dgrijalva/jwt-go",
     "github.com/skip2/go-qrcode",
     "github.com/stretchr/testify/assert",
-    "github.com/zainul/poskit/pkg/error/usererror",
-    "github.com/zainul/poskit/pkg/xlog",
+    "github.com/zainul/ark/pkg/error/usererror",
+    "github.com/zainul/ark/pkg/xlog",
     "github.com/zainul/zapbit",
     "go.uber.org/zap",
     "golang.org/x/crypto/bcrypt",

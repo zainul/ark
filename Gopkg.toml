@@ -43,7 +43,7 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/zainul/poskit"
+  name = "github.com/zainul/ark"
 
 [[constraint]]
   branch = "master"

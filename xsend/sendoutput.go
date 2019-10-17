@@ -3,7 +3,7 @@ package xsend
 import (
 	"context"
 	"encoding/json"
-	"github.com/zainul/poskit/pkg/xlog"
+	"github.com/zainul/ark/pkg/xlog"
 	"net/http"
 )
 
