@@ -57,8 +57,14 @@ func NewXLog(server, password, user, queueName, service string, port int) (*zap.
 
 // Info write to log info
 func Info(ctx context.Context, msg string, value ...interface{}) {
+	var (
+		rqID string
+		ok   bool
+	)
 
-	rqID := ctx.Value("request_id").(string)
+	if rqID, ok = ctx.Value("request_id").(string); !ok {
+		rqID = "NoRequestID"
+	}
 
 	var str string
 	for _, val := range value {
@@ -81,7 +87,14 @@ func Info(ctx context.Context, msg string, value ...interface{}) {
 // Warning ...
 func Warning(ctx context.Context, msg string, value ...interface{}) {
 
-	rqID := ctx.Value("request_id").(string)
+	var (
+		rqID string
+		ok   bool
+	)
+
+	if rqID, ok = ctx.Value("request_id").(string); !ok {
+		rqID = "NoRequestID"
+	}
 
 	var str string
 	for _, val := range value {
@@ -109,8 +122,17 @@ func Debug(msg string, value ...interface{}) {
 // Error ...
 func Error(ctx context.Context, msg string, err error) {
 
+	var (
+		rqID string
+		ok   bool
+	)
+
+	if rqID, ok = ctx.Value("request_id").(string); !ok {
+		rqID = "NoRequestID"
+	}
+
 	if err != nil {
-		rqID := ctx.Value("request_id").(string)
+		rqID = ctx.Value("request_id").(string)
 		logger.Warn(
 			msg+" :: "+err.Error(),
 			zap.String("request_id", rqID),
