@@ -1,0 +1,27 @@
+package database
+
+import (
+	"database/sql"
+
+	"github.com/jmoiron/sqlx"
+)
+
+// A Database interface provides connectivity to DB
+type Database interface {
+	Queryx(query string, args ...interface{}) (*sqlx.Rows, error)
+	QueryRowx(query string, args ...interface{}) *sqlx.Row
+	Begin() (*sql.Tx, error)
+	Beginx() (*sqlx.Tx, error)
+	Get(dest interface{}, query string, args ...interface{}) error
+	Master() *sqlx.DB
+	Exec(query string, args ...interface{}) (sql.Result, error)
+	Query(query string, args ...interface{}) (*sql.Rows, error)
+	QueryRow(query string, args ...interface{}) *sql.Row
+	// SelectMaster using master db.
+	SelectMaster(dest interface{}, query string, args ...interface{}) error
+}
+
+// List of errors
+const (
+	SQLNoRowsInResultSet = "sql: no rows in result set"
+)
