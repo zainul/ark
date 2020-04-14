@@ -23,7 +23,7 @@ func newGorm(ctx context.Context, dialect string, cfg Config) DB {
 		log.Fatal("Failed to init db", err)
 	}
 
-	dbs[slave], err = gorm.Open(dialect, cfg.SlaveConn)
+	dbs[slave], err = apmgorm.Open(dialect, cfg.SlaveConn)
 
 	if err != nil {
 		log.Fatal("Failed to init db", err)
