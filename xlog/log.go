@@ -2,11 +2,11 @@ package xlog
 
 import (
 	"context"
-	"fmt"
-	"log"
+	"encoding/json"
+	"go.elastic.co/apm/module/apmzap"
 	"os"
-	"strings"
 	"sync"
+	"time"
 
 	"github.com/zainul/zapbit"
 	"go.uber.org/zap"
@@ -22,32 +22,15 @@ var (
 )
 
 // NewXLog is init streamer log
-func NewXLog(server, password, user, queueName, service string, port int) (*zap.Logger, *zapbit.Writer, error) {
+//func NewXLog(server, password, user, queueName, service string, port int) (*zap.Logger, *zapbit.Writer, error) {
+func NewXLog(service string) (*zap.Logger, error) {
 	once.Do(func() {
-		if strings.ToLower(os.Getenv("env")) == strings.ToLower("production") {
-			wr, err = zapbit.NewWriter(zapbit.RabbitMQConfig{
-				Address:  server,
-				Password: password,
-				User:     user,
-				Port:     port,
-			}, queueName)
-
-			if err != nil {
-				fmt.Println("error connect to rabbit mq streamer", err)
-				return
-			}
-
-			log.Println("this message for log Production Only")
-			logger = zap.New(wr.GetCore())
-
-		} else {
-			logger = zap.NewExample() // or NewProduction, or NewDevelopment
-		}
+		logger, _ = zap.NewProduction(zap.WrapCore((&apmzap.Core{}).WrapCore))
 		hostName, _ = os.Hostname()
 		serviceName = service
 	})
 
-	return logger, wr, nil
+	return logger, nil
 
 	// should trigger this in usage of xlog
 	// Sync calls the underlying Core's Sync method, flushing any buffered log entries. Applications should take care to call Sync before exiting.
@@ -73,8 +56,10 @@ func Info(ctx context.Context, msg string, value ...interface{}) {
 		}
 	}
 
-	logger.Info(
+	traceContextFields := apmzap.TraceContext(ctx)
+	logger.With(traceContextFields...).Info(
 		msg,
+		zap.String("time", time.Now().Format(time.RFC3339)),
 		zap.String("value", str),
 		zap.String("request_id", rqID),
 		zap.String("hostname", hostName),
@@ -103,8 +88,10 @@ func Warning(ctx context.Context, msg string, value ...interface{}) {
 		}
 	}
 
-	logger.Warn(
+	traceContextFields := apmzap.TraceContext(ctx)
+	logger.With(traceContextFields...).Warn(
 		msg,
+		zap.String("time", time.Now().Format(time.RFC3339)),
 		zap.String("value", str),
 		zap.String("request_id", rqID),
 		zap.String("hostname", hostName),
@@ -115,8 +102,14 @@ func Warning(ctx context.Context, msg string, value ...interface{}) {
 }
 
 // Debug ...
-func Debug(msg string, value ...interface{}) {
-	logger.Debug(msg)
+func Debug(ctx context.Context, msg string, value ...interface{}) {
+	traceContextFields := apmzap.TraceContext(ctx)
+	bt, _ := json.Marshal(value)
+	logger.With(traceContextFields...).Debug(
+		msg,
+		zap.String("time", time.Now().Format(time.RFC3339)),
+		zap.ByteString("value", bt),
+	)
 }
 
 // Error ...
@@ -133,8 +126,10 @@ func Error(ctx context.Context, msg string, err error) {
 
 	if err != nil {
 		rqID = ctx.Value("request_id").(string)
-		logger.Warn(
+		traceContextFields := apmzap.TraceContext(ctx)
+		logger.With(traceContextFields...).Warn(
 			msg+" :: "+err.Error(),
+			zap.String("time", time.Now().Format(time.RFC3339)),
 			zap.String("request_id", rqID),
 			zap.String("hostname", hostName),
 			zap.String("service", serviceName),
@@ -150,8 +145,10 @@ func Response(ctx context.Context, msg string, contractReq []byte, contractBody 
 
 	rqID := ctx.Value("request_id").(string)
 
-	logger.Warn(
+	traceContextFields := apmzap.TraceContext(ctx)
+	logger.With(traceContextFields...).Warn(
 		msg,
+		zap.String("time", time.Now().Format(time.RFC3339)),
 		zap.String("request_id", rqID),
 		zap.String("hostname", hostName),
 		zap.String("service", serviceName),

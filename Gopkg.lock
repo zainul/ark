@@ -160,6 +160,12 @@
   revision = "8c9f03a8e57eb486e42badaed3fb287da51807ba"
 
 [[projects]]
+  name = "github.com/golang/mock"
+  packages = ["gomock"]
+  revision = "3a35fb6e3e18b9dbfee291262260dee7372d2a92"
+  version = "v1.4.3"
+
+[[projects]]
   name = "github.com/golang/protobuf"
   packages = [
     "proto",
@@ -403,6 +409,7 @@
     "model",
     "module/apmgorm",
     "module/apmsql",
+    "module/apmzap",
     "stacktrace",
     "transport"
   ]
@@ -749,6 +756,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "36d7e70de2f48a9641113a54ecc690316bf80452e70adb5979af5de3cc7d0413"
+  inputs-digest = "4e170d3647423d91d999f6a95d046fbd5002ee0c0970658e5be07259350fdfce"
   solver-name = "gps-cdcl"
   solver-version = 1
