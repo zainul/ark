@@ -24,6 +24,12 @@
   version = "v0.3.1"
 
 [[projects]]
+  name = "github.com/armon/go-metrics"
+  packages = ["."]
+  revision = "38377b616bac08306ad0903d5fb436a5330d2973"
+  version = "v0.3.3"
+
+[[projects]]
   name = "github.com/armon/go-radix"
   packages = ["."]
   revision = "1a2de0c21c94309923825da3df33a4381872c795"
@@ -128,6 +134,12 @@
   version = "v1.0.1"
 
 [[projects]]
+  name = "github.com/fatih/color"
+  packages = ["."]
+  revision = "daf2830f2741ebb735b21709a520c5f37d642d85"
+  version = "v1.9.0"
+
+[[projects]]
   name = "github.com/go-redis/redis"
   packages = [
     ".",
@@ -226,6 +238,48 @@
   version = "v2.0.1"
 
 [[projects]]
+  name = "github.com/hashicorp/consul"
+  packages = ["api"]
+  revision = "9ea1a204d832cfd4d8c5cba9df56876a526a4531"
+  version = "v1.7.2"
+
+[[projects]]
+  name = "github.com/hashicorp/go-cleanhttp"
+  packages = ["."]
+  revision = "eda1e5db218aad1db63ca4642c8906b26bcf2744"
+  version = "v0.5.1"
+
+[[projects]]
+  name = "github.com/hashicorp/go-hclog"
+  packages = ["."]
+  revision = "24cddb1fb85ce678527dab791c1ce88d82bc959d"
+  version = "v0.12.2"
+
+[[projects]]
+  name = "github.com/hashicorp/go-immutable-radix"
+  packages = ["."]
+  revision = "e47f517af50356c81b117418760ac7dfd7b7af62"
+  version = "v1.2.0"
+
+[[projects]]
+  name = "github.com/hashicorp/go-rootcerts"
+  packages = ["."]
+  revision = "98fadc2a5ba2ad2a534a179b352ecdfd1f4259aa"
+  version = "v1.0.2"
+
+[[projects]]
+  name = "github.com/hashicorp/golang-lru"
+  packages = ["simplelru"]
+  revision = "14eae340515388ca95aa8e7b86f0de668e981f54"
+  version = "v0.5.4"
+
+[[projects]]
+  name = "github.com/hashicorp/serf"
+  packages = ["coordinate"]
+  revision = "cd08d5c62353f383882b630bf238a77b4d5ef73b"
+  version = "v0.9.0"
+
+[[projects]]
   name = "github.com/jinzhu/gorm"
   packages = ["."]
   revision = "79a77d771dee4e4b60e9c543e8663bbc80466670"
@@ -287,6 +341,30 @@
   ]
   revision = "8edcc4e51f39ddbd3505a3386aff3f435a7fd028"
   version = "v0.7.1"
+
+[[projects]]
+  name = "github.com/mattn/go-colorable"
+  packages = ["."]
+  revision = "68e95eba382c972aafde02ead2cd2426a8a92480"
+  version = "v0.1.6"
+
+[[projects]]
+  name = "github.com/mattn/go-isatty"
+  packages = ["."]
+  revision = "7b513a986450394f7bbf1476909911b3aa3a55ce"
+  version = "v0.0.12"
+
+[[projects]]
+  name = "github.com/mitchellh/go-homedir"
+  packages = ["."]
+  revision = "af06845cf3004701891bf4fdb884bfe4920b3727"
+  version = "v1.1.0"
+
+[[projects]]
+  name = "github.com/mitchellh/mapstructure"
+  packages = ["."]
+  revision = "694aaefbc689be1915c2ef39e880409057931a94"
+  version = "v1.2.2"
 
 [[projects]]
   name = "github.com/patrickmn/go-cache"
@@ -756,6 +834,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4e170d3647423d91d999f6a95d046fbd5002ee0c0970658e5be07259350fdfce"
+  inputs-digest = "587245fb24472979f6e2b10e66df80b3656531c00b2946c2b48106e7b1f69673"
   solver-name = "gps-cdcl"
   solver-version = 1
