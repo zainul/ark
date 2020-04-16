@@ -31,6 +31,8 @@ func (s *slidingWindowRule) IsRateLimit(requestTime time.Time) (bool, error) {
 
 	if s.limiterType == SlidingWindowLimiterByRPM {
 		d = 60 * time.Second
+	} else if s.limiterType == SlidingWindowLimiterByRPS {
+		d = 1 * time.Second
 	}
 
 	redisKey := "ark:rl:slidingwindow:" + s.uniqueID + ":" + strconv.FormatInt(requestTime.Truncate(d).Unix(), 10)

@@ -14,4 +14,5 @@ type slidingWindowRule struct {
 
 const (
 	SlidingWindowLimiterByRPM = 1
+	SlidingWindowLimiterByRPS = 2
 )
