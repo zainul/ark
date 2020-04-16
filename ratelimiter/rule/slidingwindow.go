@@ -33,7 +33,7 @@ func (s *slidingWindowRule) IsRateLimit(requestTime time.Time) (bool, error) {
 		d = 60 * time.Second
 	}
 
-	redisKey := "travel:rl:slidingwindow:" + s.uniqueID + ":" + strconv.FormatInt(requestTime.Truncate(d).Unix(), 10)
+	redisKey := "ark:rl:slidingwindow:" + s.uniqueID + ":" + strconv.FormatInt(requestTime.Truncate(d).Unix(), 10)
 
 	// Get current hits value
 	currentHits := s.redis.Get(redisKey).Int()

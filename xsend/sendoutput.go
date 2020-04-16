@@ -2,22 +2,36 @@ package xsend
 
 import (
 	"context"
-	"encoding/json"
+
 	"github.com/zainul/ark/xlog"
-	"net/http"
+	jsoniter "github.com/json-iterator/go"
+
+	"sync"
 )
+var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
-// Write is to make response of http
-func Write(ctx context.Context, w http.ResponseWriter, request interface{}, response interface{}, statusCode ...int) {
-	if len(statusCode) > 0 {
-		w.WriteHeader(statusCode[0])
-	}
+func Go(ctx context.Context, request interface{}, response interface{}, statusCode int) (int, interface{}) {
+	go func(req interface{}, res interface{}) {
+		var wg sync.WaitGroup
 
-	go func() {
-		bt, _ := json.Marshal(response)
-		btreq, _ := json.Marshal(request)
+		wg.Add(2)
+
+		var bt []byte
+		go func(waitGroup *sync.WaitGroup){
+			defer waitGroup.Done()
+			bt, _ = json.Marshal(res)
+		}(&wg)
+
+		var btreq []byte
+		go func(waitGroup *sync.WaitGroup){
+			defer waitGroup.Done()
+			btreq, _ = json.Marshal(req)
+		}(&wg)
+
+		wg.Wait()
+
 		xlog.Response(ctx, "response writer", btreq, bt)
-	}()
+	}(request, response)
 
-	json.NewEncoder(w).Encode(response)
+	return statusCode, response
 }
