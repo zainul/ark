@@ -3,7 +3,7 @@ package ratelimiter
 import "time"
 
 // New ratelimiter module
-func New(rules []RateLimiterRule) Ratelimiter {
+func New(rules []Rule) Rule {
 	module := &rlModule{
 		rules: rules,
 	}

@@ -19,7 +19,7 @@ func ToFloat64(v interface{}) (result float64) {
 	case int:
 		result = float64(v)
 	case int64:
-	 	result = float64(v)
+		result = float64(v)
 	case float64:
 		result = v
 	case uint8:

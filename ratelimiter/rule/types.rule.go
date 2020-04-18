@@ -1,15 +1,15 @@
 package rule
 
 import (
-	"github.com/zainul/ark/storage/redis"
+	"github.com/zainul/ark/bridge/cache"
 )
 
 type slidingWindowRule struct {
-	uniqueID      string
-	expirySeconds int
-	limiterType   int
-	requestLimit  int
-	redis         redis.Redis
+	uniqueID     string
+	expiry       int
+	limiterType  int
+	requestLimit int
+	redis        cache.Cache
 }
 
 const (

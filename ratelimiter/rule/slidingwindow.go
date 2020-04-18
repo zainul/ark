@@ -5,17 +5,17 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/zainul/ark/bridge/cache"
 	"github.com/zainul/ark/ratelimiter"
-	"github.com/zainul/ark/storage/redis"
 )
 
-func NewSlidingWindow(uniqueID string, expirySeconds int, limiterType int, requestLimit int, rds redis.Redis) ratelimiter.RateLimiterRule {
+func NewSlidingWindow(uniqueID string, expiry int, limiterType int, requestLimit int, rds cache.Cache) ratelimiter.Rule {
 	return &slidingWindowRule{
-		uniqueID:      uniqueID,
-		limiterType:   limiterType,
-		requestLimit:  requestLimit,
-		expirySeconds: expirySeconds,
-		redis:         rds,
+		uniqueID:     uniqueID,
+		limiterType:  limiterType,
+		requestLimit: requestLimit,
+		expiry:       expiry,
+		redis:        rds,
 	}
 }
 
@@ -38,7 +38,12 @@ func (s *slidingWindowRule) IsRateLimit(requestTime time.Time) (bool, error) {
 	redisKey := "ark:rl:slidingwindow:" + s.uniqueID + ":" + strconv.FormatInt(requestTime.Truncate(d).Unix(), 10)
 
 	// Get current hits value
-	currentHits := s.redis.Get(redisKey).Int()
+	var currentHits int
+	err := s.redis.Get(redisKey, &currentHits)
+
+	if err != nil {
+		return false, err
+	}
 
 	// Exceed maximum hits
 	if currentHits >= s.requestLimit {
@@ -46,13 +51,13 @@ func (s *slidingWindowRule) IsRateLimit(requestTime time.Time) (bool, error) {
 	}
 
 	// Increment total hits
-	if count, _ := s.redis.IncrSingle(redisKey); count >= s.requestLimit {
-		s.redis.Expire(redisKey, s.expirySeconds)
+	if count, _ := s.redis.TxIncr(redisKey); int(count) >= s.requestLimit {
+		_ = s.redis.Expire(redisKey, time.Duration(s.expiry)*time.Second)
 		return true, nil
 	}
 
 	// Set redis expiry
-	s.redis.Expire(redisKey, s.expirySeconds)
+	_ = s.redis.Expire(redisKey, time.Duration(s.expiry)*time.Second)
 
 	return false, nil
 }

@@ -30,7 +30,7 @@ func TestIntArrToStringArr(t *testing.T) {
 
 func TestParseToDestination(t *testing.T) {
 	obj := ComparedTestStruct{
-		ACompare:    "huruf A",
+		ACompare: "huruf A",
 		SubsCompare: []Sub{
 			{
 				1,

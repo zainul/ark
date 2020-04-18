@@ -2,19 +2,12 @@ package ratelimiter
 
 import (
 	"time"
-
-	"github.com/zainul/ark/logging/datadog"
 )
 
 type rlModule struct {
-	rules []RateLimiterRule
-	ddog  datadog.Datadog
+	rules []Rule
 }
 
-type Ratelimiter interface {
-	IsRateLimit(requestTime time.Time) (bool, error)
-}
-
-type RateLimiterRule interface {
+type Rule interface {
 	IsRateLimit(requestTime time.Time) (bool, error)
 }

@@ -22,7 +22,7 @@ const (
 
 var (
 	instanceTypeMap = map[Instance]string{
-		InstanceGeneral:    "general",
+		InstanceGeneral: "general",
 	}
 
 	// statusvalue is status in multivalue row, 1 is active and 0 is inactive

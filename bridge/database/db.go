@@ -7,12 +7,13 @@ import (
 
 //DriverImplementor is chooser implementation of DB interface
 type DriverImplementor string
+
 //DBType is type definition of database type like master slave
 type DBType string
 
 const (
 	// GORM is constant package of jinzhu gorm
-	GORM   DriverImplementor = "gorm"
+	GORM DriverImplementor = "gorm"
 	// SQLX is constant package of sqlx jomoiron
 	SQLX   DriverImplementor = "sqlx"
 	slave  DBType            = "slave"
@@ -25,7 +26,7 @@ type (
 		// MasterConn is master connection of database
 		MasterConn *sql.DB
 		// Slave is master connection of database
-		SlaveConn  *sql.DB
+		SlaveConn *sql.DB
 	}
 )
 

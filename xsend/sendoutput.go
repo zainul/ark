@@ -3,11 +3,12 @@ package xsend
 import (
 	"context"
 
-	"github.com/zainul/ark/xlog"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/zainul/ark/xlog"
 
 	"sync"
 )
+
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 func Go(ctx context.Context, request interface{}, response interface{}, statusCode int) (int, interface{}) {
@@ -17,13 +18,13 @@ func Go(ctx context.Context, request interface{}, response interface{}, statusCo
 		wg.Add(2)
 
 		var bt []byte
-		go func(waitGroup *sync.WaitGroup){
+		go func(waitGroup *sync.WaitGroup) {
 			defer waitGroup.Done()
 			bt, _ = json.Marshal(res)
 		}(&wg)
 
 		var btreq []byte
-		go func(waitGroup *sync.WaitGroup){
+		go func(waitGroup *sync.WaitGroup) {
 			defer waitGroup.Done()
 			btreq, _ = json.Marshal(req)
 		}(&wg)
