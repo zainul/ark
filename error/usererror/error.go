@@ -30,11 +30,11 @@ const (
 	UserNotFound             = ServiceName + "19"
 	AccountNotActivatedYet   = ServiceName + "20"
 
-	ProductCodeRequired   = ReloadService + "0"
-	AmountRequired        = ReloadService + "1"
-	FulfillNumberRequired = ReloadService + "2"
-	RefIDRequired         = ReloadService + "3"
-	FulfillmentFailed     = ReloadService + "4"
+	ProductCodeRequired   = ReloadService + "1"
+	AmountRequired        = ReloadService + "2"
+	FulfillNumberRequired = ReloadService + "3"
+	RefIDRequired         = ReloadService + "4"
+	FulfillmentFailed     = ReloadService + "5"
 )
 
 func init() {
