@@ -2,7 +2,10 @@ package usererror
 
 var OwnErrors map[string]string
 
-const ServiceName = "01E"
+const (
+	ServiceName   = "01E"
+	ReloadService = "RC"
+)
 
 const (
 	NotFoundCode             = ServiceName + "0"
@@ -26,6 +29,12 @@ const (
 	AccountAlreadyActivate   = ServiceName + "18"
 	UserNotFound             = ServiceName + "19"
 	AccountNotActivatedYet   = ServiceName + "20"
+
+	ProductCodeRequired   = ReloadService + "0"
+	AmountRequired        = ReloadService + "1"
+	FulfillNumberRequired = ReloadService + "2"
+	RefIDRequired         = ReloadService + "3"
+	FulfillmentFailed     = ReloadService + "4"
 )
 
 func init() {
@@ -52,6 +61,12 @@ func init() {
 	errs[AccountAlreadyActivate] = "Account already activate"
 	errs[UserNotFound] = "User Not found or not register in our system"
 	errs[AccountNotActivatedYet] = "Account is not activated yet"
+
+	errs[ProductCodeRequired] = "Product code is required"
+	errs[AmountRequired] = "Amount is required"
+	errs[FulfillNumberRequired] = "Fulfillment number is required"
+	errs[RefIDRequired] = " Reference ID is required"
+	errs[FulfillmentFailed] = "Fulfillment is failed"
 
 	OwnErrors = errs
 }
