@@ -52,7 +52,7 @@ func SHA1(message string, secret string) string {
 	return base64.StdEncoding.EncodeToString(h.Sum(nil))
 }
 
-func  SHA256HMACHash(secret, data string) string {
+func SHA256HMACHash(secret, data string) string {
 	// Create a new HMAC by defining the hash type and the key (as byte array)
     h := hmac.New(sha256.New, []byte(secret))
     // Write Data to it
