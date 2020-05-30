@@ -35,7 +35,7 @@ func (c *HTTP) Call(
 	body io.Reader,
 	header map[string]string,
 ) ([]byte, error) {
-	req, err := c.GetRequest(method, url, body)
+	req, err := http.NewRequest(method, url, body)
 
 	if err != nil {
 		log.Println("handle call error @http.Call", err)
@@ -63,16 +63,4 @@ func (c *HTTP) Call(
 	}
 
 	return resBody, nil
-}
-
-// GetRequest ...
-func (c *HTTP) GetRequest(method, url string, body io.Reader) (*http.Request, error) {
-	req, err := http.NewRequest(http.MethodGet, url, body)
-
-	if err != nil {
-		log.Println("func GetRequest http @http.GetRequest", err)
-		return nil, err
-	}
-
-	return req, nil
 }
