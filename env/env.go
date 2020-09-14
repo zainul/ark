@@ -1,5 +1,7 @@
 package env
 
+import "os"
+
 // Environment constants
 const (
 	Development = "development"
