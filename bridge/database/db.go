@@ -3,8 +3,6 @@ package database
 import (
 	"context"
 	"database/sql"
-
-	"github.com/jinzhu/gorm"
 )
 
 //DriverImplementor is chooser implementation of DB interface
@@ -50,7 +48,8 @@ func NewDB(ctx context.Context, dialect string, cfg Config, driverPlugin DriverI
 
 //go:generate mockgen -destination mock/mock_db.go github.com/zainul/ark/bridge/database DB
 type DB interface {
-	GetDB() *gorm.DB
+	//RunAsUnit is run sequentially transaction
+	RunAsUnit(action func() error) error
 	// Create is definitely insert to one table
 	Create(ctx context.Context, data interface{}) error
 	// Update is definitely update to one table, with condition parameter (operator is AND if multi condition)

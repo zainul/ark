@@ -12,6 +12,7 @@ import (
 
 type jinzhuGorm struct {
 	dbs map[DBType]*gorm.DB
+	tx *gorm.DB
 }
 
 func newGorm(ctx context.Context, dialect string, cfg Config) DB {
@@ -38,17 +39,34 @@ func newGorm(ctx context.Context, dialect string, cfg Config) DB {
 
 }
 
-func (g *jinzhuGorm) GetDB() *gorm.DB {
-	 return g.dbs[master]
+func (g *jinzhuGorm) RunAsUnit(action func() error) error {
+	var errAction error
+	g.dbs[master].Transaction(func(tx *gorm.DB) error {
+		g.tx = tx
+		if errAction = action(); errAction != nil {
+			return errAction
+		}
+		return nil
+	})
+	g.tx = nil
+	return errAction
 }
 
 func (g *jinzhuGorm) Create(ctx context.Context, data interface{}) error {
 	g.dbs[master] = apmgorm.WithContext(ctx, g.dbs[master])
+	if g.tx != nil {
+		g.tx.Create(data)
+	}
 	return g.dbs[master].Create(data).Error
 }
 
 func (g *jinzhuGorm) EntityBy(ctx context.Context, field string, value interface{}, target interface{}) error {
 	g.dbs[slave] = apmgorm.WithContext(ctx, g.dbs[slave])
+
+	if g.tx != nil {
+		return g.tx.Where(map[string]interface{}{field: value}).Find(target).Error
+	}
+
 	return g.dbs[slave].Where(map[string]interface{}{field: value}).Find(target).Error
 }
 
@@ -77,6 +95,10 @@ func (g *jinzhuGorm) Update(ctx context.Context, table string, data map[string]i
 	vals = append(vals, whereVals...)
 
 	g.dbs[master] = apmgorm.WithContext(ctx, g.dbs[master])
+
+	if g.tx != nil {
+		return g.tx.Exec(query, vals...).Error
+	}
 	return g.dbs[master].Exec(query, vals...).Error
 }
 
@@ -92,15 +114,27 @@ func (g *jinzhuGorm) Delete(ctx context.Context, table string, whereCondition ma
 
 	query = query + strings.Join(whereField, " AND ")
 	g.dbs[master] = apmgorm.WithContext(ctx, g.dbs[master])
+
+	if g.tx != nil {
+		return g.tx.Exec(query, whereVals...).Error
+	}
 	return g.dbs[master].Exec(query, whereVals...).Error
 }
 
 func (g *jinzhuGorm) QueryExec(ctx context.Context, query string, args ...interface{}) error {
 	g.dbs[master] = apmgorm.WithContext(ctx, g.dbs[master])
+
+	if g.tx != nil {
+		return g.tx.Exec(query, args...).Error
+	}
 	return g.dbs[master].Exec(query, args...).Error
 }
 
 func (g *jinzhuGorm) QueryRaw(ctx context.Context, target interface{}, sql string, values ...interface{}) error {
 	g.dbs[master] = apmgorm.WithContext(ctx, g.dbs[master])
+
+	if g.tx != nil {
+		return g.tx.Raw(sql, values).Find(target).Error
+	}
 	return g.dbs[slave].Raw(sql, values).Find(target).Error
 }
