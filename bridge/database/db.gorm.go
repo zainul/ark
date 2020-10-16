@@ -38,6 +38,10 @@ func newGorm(ctx context.Context, dialect string, cfg Config) DB {
 
 }
 
+func (g *jinzhuGorm) GetDB() *gorm.DB {
+	 return g.dbs[master]
+}
+
 func (g *jinzhuGorm) Create(ctx context.Context, data interface{}) error {
 	g.dbs[master] = apmgorm.WithContext(ctx, g.dbs[master])
 	return g.dbs[master].Create(data).Error
