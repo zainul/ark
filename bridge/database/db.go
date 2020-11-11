@@ -49,17 +49,17 @@ func NewDB(ctx context.Context, dialect string, cfg Config, driverPlugin DriverI
 //go:generate mockgen -destination mock/mock_db.go github.com/zainul/ark/bridge/database DB
 type DB interface {
 	//RunAsUnit is run sequentially transaction
-	RunAsUnit(action func() error) error
+	RunAsUnit(action func(tx interface{}) error) error
 	// Create is definitely insert to one table
-	Create(ctx context.Context, data interface{}) error
+	Create(ctx context.Context, data interface{}, txs ...interface{}) error
 	// Update is definitely update to one table, with condition parameter (operator is AND if multi condition)
-	Update(ctx context.Context, table string, data map[string]interface{}, whereCondition map[string]interface{}) error
+	Update(ctx context.Context, table string, data map[string]interface{}, whereCondition map[string]interface{}, txs ...interface{}) error
 	// Delete is definitely delete to one table, with condition parameter (operator is AND if multi condition)
-	Delete(ctx context.Context, table string, whereCondition map[string]interface{}) error
+	Delete(ctx context.Context, table string, whereCondition map[string]interface{}, txs ...interface{}) error
 	// QueryExec is raw query to exec statement of insert, update or delete
-	QueryExec(ctx context.Context, query string, args ...interface{}) error
+	QueryExec(ctx context.Context, txs interface{}, query string, args ...interface{}) error
 	// QueryRaw is raw query to exec statement of insert, update or delete
-	QueryRaw(ctx context.Context, target interface{}, sql string, values ...interface{}) error
+	QueryRaw(ctx context.Context, txs interface{}, target interface{}, sql string, values ...interface{}) error
 	// EntityBy is find in entity by one field and targeted result set in parameter
-	EntityBy(ctx context.Context, field string, value interface{}, target interface{}) error
+	EntityBy(ctx context.Context, field string, value interface{}, target interface{}, txs ...interface{}) error
 }
