@@ -54,7 +54,7 @@ func (g *jinzhuGorm) Create(ctx context.Context, data interface{}, txs ...interf
 
 	if len(txs) > 0 && txs[0] != nil {
 		tx, _ := txs[0].(*gorm.DB)
-		tx.Create(data)
+		return tx.Create(data).Error
 	}
 	return g.dbs[master].Create(data).Error
 }
