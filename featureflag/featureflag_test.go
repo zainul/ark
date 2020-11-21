@@ -3,9 +3,9 @@ package featureflag_test
 import (
 	"testing"
 
-	gock "gopkg.in/h2non/gock.v1"
 	"github.com/stretchr/testify/assert"
 	. "github.com/zainul/ark/featureflag"
+	gock "gopkg.in/h2non/gock.v1"
 )
 
 func TestNewError(t *testing.T) {

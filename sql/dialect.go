@@ -2,5 +2,5 @@ package sql
 
 const (
 	Postgres = "postgres"
-	MySQL = "mysql"
+	MySQL    = "mysql"
 )

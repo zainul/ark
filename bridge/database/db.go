@@ -27,6 +27,8 @@ type (
 		MasterConn *sql.DB
 		// Slave is master connection of database
 		SlaveConn *sql.DB
+		//LogMode is mode for log enable
+		LogMode bool
 	}
 )
 
