@@ -41,8 +41,8 @@ func newGorm(ctx context.Context, dialect string, cfg Config) DB {
 }
 
 func (g *jinzhuGorm) RunAsUnit(action func(tx interface{}) error) error {
-	g.mut.RLock()
-	defer g.mut.RUnlock()
+	g.mut.Lock()
+	defer g.mut.Unlock()
 	var errAction error
 	g.dbs[master].Transaction(func(tx *gorm.DB) error {
 		if errAction = action(tx); errAction != nil {
@@ -54,8 +54,8 @@ func (g *jinzhuGorm) RunAsUnit(action func(tx interface{}) error) error {
 }
 
 func (g *jinzhuGorm) Create(ctx context.Context, data interface{}, txs ...interface{}) error {
-	g.mut.RLock()
-	defer g.mut.RUnlock()
+	g.mut.Lock()
+	defer g.mut.Unlock()
 	g.dbs[master] = apmgorm.WithContext(ctx, g.dbs[master])
 
 	if len(txs) > 0 && txs[0] != nil {
@@ -66,8 +66,8 @@ func (g *jinzhuGorm) Create(ctx context.Context, data interface{}, txs ...interf
 }
 
 func (g *jinzhuGorm) EntityBy(ctx context.Context, field string, value interface{}, target interface{}, txs ...interface{}) error {
-	g.mut.RLock()
-	defer g.mut.RUnlock()
+	g.mut.Lock()
+	defer g.mut.Unlock()
 	g.dbs[slave] = apmgorm.WithContext(ctx, g.dbs[slave])
 
 	if len(txs) > 0 && txs[0] != nil {
@@ -79,8 +79,8 @@ func (g *jinzhuGorm) EntityBy(ctx context.Context, field string, value interface
 }
 
 func (g *jinzhuGorm) Update(ctx context.Context, table string, data map[string]interface{}, whereCondition map[string]interface{}, txs ...interface{}) error {
-	g.mut.RLock()
-	defer g.mut.RUnlock()
+	g.mut.Lock()
+	defer g.mut.Unlock()
 	query := fmt.Sprintf("UPDATE %s SET ", table)
 
 	vals := make([]interface{}, 0)
@@ -114,8 +114,8 @@ func (g *jinzhuGorm) Update(ctx context.Context, table string, data map[string]i
 }
 
 func (g *jinzhuGorm) Delete(ctx context.Context, table string, whereCondition map[string]interface{}, txs ...interface{}) error {
-	g.mut.RLock()
-	defer g.mut.RUnlock()
+	g.mut.Lock()
+	defer g.mut.Unlock()
 	query := fmt.Sprintf("DELETE %s WHERE", table)
 	whereVals := make([]interface{}, 0)
 	whereField := make([]string, 0)
@@ -136,8 +136,8 @@ func (g *jinzhuGorm) Delete(ctx context.Context, table string, whereCondition ma
 }
 
 func (g *jinzhuGorm) QueryExec(ctx context.Context, txp interface{}, query string, args ...interface{}) error {
-	g.mut.RLock()
-	defer g.mut.RUnlock()
+	g.mut.Lock()
+	defer g.mut.Unlock()
 	g.dbs[master] = apmgorm.WithContext(ctx, g.dbs[master])
 
 	if txp != nil {
@@ -148,8 +148,8 @@ func (g *jinzhuGorm) QueryExec(ctx context.Context, txp interface{}, query strin
 }
 
 func (g *jinzhuGorm) QueryRaw(ctx context.Context, txp interface{}, target interface{}, sql string, values ...interface{}) error {
-	g.mut.RLock()
-	defer g.mut.RUnlock()
+	g.mut.Lock()
+	defer g.mut.Unlock()
 	g.dbs[master] = apmgorm.WithContext(ctx, g.dbs[master])
 
 	if txp != nil {
