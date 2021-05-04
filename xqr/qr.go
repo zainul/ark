@@ -15,7 +15,7 @@ type Code struct {
 	imgReview string // private field for accomodate link on first step
 }
 
-// Minimal size of qrcode is 300px according to Tokopedia upload tools
+// Minimal size of qrcode is 300px according to ark upload tools
 // Return error if size less than 300
 func validateQrCodeSpec(qrCode *Code) error {
 	if qrCode.Size < 300 {

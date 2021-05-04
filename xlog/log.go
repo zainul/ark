@@ -3,7 +3,6 @@ package xlog
 import (
 	"context"
 	"encoding/json"
-	"go.elastic.co/apm/module/apmzap"
 	"os"
 	"sync"
 	"time"

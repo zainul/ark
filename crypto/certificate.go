@@ -19,7 +19,7 @@ import (
 // Generated CSR using algorithm rsa:2048
 // example:
 //      openssl req -new -nodes -newkey rsa:2048 \ -keyout msslclient.key -out msslclient.csr -subj \
-//      "/C=ID/OU=mtf.comapi-client/O=ICCP/CN=Tokopedia-ICCP"
+//      "/C=ID/OU=mtf.comapi-client/O=ICCP/CN=ark-ICCP"
 
 type CACertificate struct {
 	PrivateKey  []byte
