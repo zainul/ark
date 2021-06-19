@@ -11,6 +11,9 @@ type DriverImplementor string
 //DBType is type definition of database type like master slave
 type DBType string
 
+//TracerImplementor is type of implementation of tracer
+type TracerImplementor string
+
 const (
 	// GORM is constant package of jinzhu gorm
 	GORM DriverImplementor = "gorm"
@@ -18,6 +21,8 @@ const (
 	SQLX   DriverImplementor = "sqlx"
 	slave  DBType            = "slave"
 	master DBType            = "master"
+
+	ElasticAPM TracerImplementor = "es-apm"
 )
 
 type (
@@ -29,6 +34,8 @@ type (
 		SlaveConn *sql.DB
 		//LogMode is mode for log enable
 		LogMode bool
+
+		Tracer TracerImplementor
 	}
 )
 

@@ -7,25 +7,25 @@ import (
 	"strings"
 
 	"github.com/jinzhu/gorm"
-	"go.elastic.co/apm/module/apmgorm"
 )
 
 type jinzhuGorm struct {
 	dbMaster   *gorm.DB
 	dbFollower *gorm.DB
+	tracer     TracerImplementor
 }
 
 func newGorm(ctx context.Context, dialect string, cfg Config) DB {
 	var err error
 	var dbM, dbS *gorm.DB
 
-	dbM, err = apmgorm.Open(dialect, cfg.MasterConn)
+	dbM, err = GetGormTracerOpen(cfg.Tracer, dialect, cfg.MasterConn)
 
 	if err != nil {
 		log.Fatal("Failed to init db", err)
 	}
 
-	dbS, err = apmgorm.Open(dialect, cfg.SlaveConn)
+	dbS, err = GetGormTracerOpen(cfg.Tracer, dialect, cfg.MasterConn)
 
 	if err != nil {
 		log.Fatal("Failed to init db", err)
@@ -37,6 +37,7 @@ func newGorm(ctx context.Context, dialect string, cfg Config) DB {
 	return &jinzhuGorm{
 		dbMaster:   dbM,
 		dbFollower: dbS,
+		tracer:     cfg.Tracer,
 	}
 
 }
@@ -54,7 +55,7 @@ func (g *jinzhuGorm) RunAsUnit(action func(tx interface{}) error) error {
 
 func (g *jinzhuGorm) Create(ctx context.Context, data interface{}, txs ...interface{}) error {
 
-	g.dbMaster = apmgorm.WithContext(ctx, g.dbMaster)
+	g.dbMaster = GetGormTracerWithContext(ctx, g.tracer, g.dbMaster)
 
 	if len(txs) > 0 && txs[0] != nil {
 		tx, _ := txs[0].(*gorm.DB)
@@ -65,7 +66,7 @@ func (g *jinzhuGorm) Create(ctx context.Context, data interface{}, txs ...interf
 
 func (g *jinzhuGorm) EntityBy(ctx context.Context, field string, value interface{}, target interface{}, txs ...interface{}) error {
 
-	g.dbFollower = apmgorm.WithContext(ctx, g.dbFollower)
+	g.dbFollower = GetGormTracerWithContext(ctx, g.tracer, g.dbMaster)
 
 	if len(txs) > 0 && txs[0] != nil {
 		tx, _ := txs[0].(*gorm.DB)
@@ -100,7 +101,7 @@ func (g *jinzhuGorm) Update(ctx context.Context, table string, data map[string]i
 
 	vals = append(vals, whereVals...)
 
-	g.dbMaster = apmgorm.WithContext(ctx, g.dbMaster)
+	g.dbMaster = GetGormTracerWithContext(ctx, g.tracer, g.dbMaster)
 
 	if len(txs) > 0 && txs[0] != nil {
 		tx, _ := txs[0].(*gorm.DB)
@@ -121,7 +122,7 @@ func (g *jinzhuGorm) Delete(ctx context.Context, table string, whereCondition ma
 	}
 
 	query = query + strings.Join(whereField, " AND ")
-	g.dbMaster = apmgorm.WithContext(ctx, g.dbMaster)
+	g.dbMaster = GetGormTracerWithContext(ctx, g.tracer, g.dbMaster)
 
 	if len(txs) > 0 && txs[0] != nil {
 		tx, _ := txs[0].(*gorm.DB)
@@ -132,7 +133,7 @@ func (g *jinzhuGorm) Delete(ctx context.Context, table string, whereCondition ma
 
 func (g *jinzhuGorm) QueryExec(ctx context.Context, txp interface{}, query string, args ...interface{}) error {
 
-	g.dbMaster = apmgorm.WithContext(ctx, g.dbMaster)
+	g.dbMaster = GetGormTracerWithContext(ctx, g.tracer, g.dbMaster)
 
 	if txp != nil {
 		tx, _ := txp.(*gorm.DB)
@@ -143,7 +144,7 @@ func (g *jinzhuGorm) QueryExec(ctx context.Context, txp interface{}, query strin
 
 func (g *jinzhuGorm) QueryRaw(ctx context.Context, txp interface{}, target interface{}, sql string, values ...interface{}) error {
 
-	g.dbMaster = apmgorm.WithContext(ctx, g.dbMaster)
+	g.dbMaster = GetGormTracerWithContext(ctx, g.tracer, g.dbMaster)
 
 	if txp != nil {
 		tx, _ := txp.(*gorm.DB)
