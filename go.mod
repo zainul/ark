@@ -18,6 +18,7 @@ require (
 	github.com/rs/xid v1.3.0
 	github.com/rs/zerolog v1.21.0
 	github.com/satori/go.uuid v1.2.0
+	github.com/segmentio/kafka-go v0.4.17
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/streadway/amqp v1.0.0 // indirect
 	github.com/stretchr/testify v1.6.1
