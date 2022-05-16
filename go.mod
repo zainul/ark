@@ -5,7 +5,7 @@ go 1.14
 require (
 	github.com/aws/aws-sdk-go v1.32.12
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/gin-gonic/gin v1.6.3
+	github.com/gin-gonic/gin v1.7.0
 	github.com/go-redis/redis v6.15.8+incompatible
 	github.com/golang/mock v1.4.3
 	github.com/grokify/html-strip-tags-go v0.0.0-20200322061010-ea0c1cf2f119
